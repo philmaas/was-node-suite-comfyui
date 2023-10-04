@@ -5659,74 +5659,74 @@ class WAS_Remove_Rembg:
         # Anything else will be evaluated by the bool function
         return bool(x)
 
-    # def image_rembg(
-    #         self,
-    #         images,
-    #         transparency=True,
-    #         model="u2net",
-    #         alpha_matting=False,
-    #         alpha_matting_foreground_threshold=240,
-    #         alpha_matting_background_threshold=10,
-    #         alpha_matting_erode_size=10,
-    #         post_processing=False,
-    #         only_mask=False,
-    #         background_color="none",
-    #         # putalpha = False,
-    # ):
+    def image_rembg(
+            self,
+            images,
+            transparency=True,
+            model="u2net",
+            alpha_matting=False,
+            alpha_matting_foreground_threshold=240,
+            alpha_matting_background_threshold=10,
+            alpha_matting_erode_size=10,
+            post_processing=False,
+            only_mask=False,
+            background_color="none",
+            # putalpha = False,
+    ):
 
-    #     # ComfyUI will allow strings in place of booleans, validate the input.
-    #     transparency = transparency if type(transparency) is bool else self.__convertToBool(transparency)
-    #     alpha_matting = alpha_matting if type(alpha_matting) is bool else self.__convertToBool(alpha_matting)
-    #     post_processing = post_processing if type(post_processing) is bool else self.__convertToBool(post_processing)
-    #     only_mask = only_mask if type(only_mask) is bool else self.__convertToBool(only_mask)
+        # ComfyUI will allow strings in place of booleans, validate the input.
+        transparency = transparency if type(transparency) is bool else self.__convertToBool(transparency)
+        alpha_matting = alpha_matting if type(alpha_matting) is bool else self.__convertToBool(alpha_matting)
+        post_processing = post_processing if type(post_processing) is bool else self.__convertToBool(post_processing)
+        only_mask = only_mask if type(only_mask) is bool else self.__convertToBool(only_mask)
 
-    #     if "rembg" not in packages():
-    #         install_package("rembg")
+        if "rembg" not in packages():
+            install_package("rembg")
 
-    #     from rembg import remove, new_session
+        from rembg import remove, new_session
 
-    #     os.environ['U2NET_HOME'] = os.path.join(MODELS_DIR, 'rembg')
-    #     os.makedirs(os.environ['U2NET_HOME'], exist_ok=True)
+        os.environ['U2NET_HOME'] = os.path.join(MODELS_DIR, 'rembg')
+        os.makedirs(os.environ['U2NET_HOME'], exist_ok=True)
 
-    #     # Set bgcolor
-    #     bgrgba = None
-    #     match background_color:
-    #         case "black":
-    #             bgrgba = [0, 0, 0, 255]
-    #         case "white":
-    #             bgrgba = [255, 255, 255, 255]
-    #         case "magenta":
-    #             bgrgba = [255, 0, 255, 255]
-    #         case "chroma green":
-    #             bgrgba = [0, 177, 64, 255]
-    #         case "chroma blue":
-    #             bgrgba = [0, 71, 187, 255]
-    #         case _:
-    #             bgrgba = None
+        # Set bgcolor
+        bgrgba = None
+        match background_color:
+            case "black":
+                bgrgba = [0, 0, 0, 255]
+            case "white":
+                bgrgba = [255, 255, 255, 255]
+            case "magenta":
+                bgrgba = [255, 0, 255, 255]
+            case "chroma green":
+                bgrgba = [0, 177, 64, 255]
+            case "chroma blue":
+                bgrgba = [0, 71, 187, 255]
+            case _:
+                bgrgba = None
 
-    #     if transparency and bgrgba is not None:
-    #         bgrgba[3] = 0
+        if transparency and bgrgba is not None:
+            bgrgba[3] = 0
 
-    #     batch_tensor = []
-    #     for image in images:
-    #         image = tensor2pil(image)
-    #         batch_tensor.append(pil2tensor(
-    #             remove(
-    #                 image,
-    #                 session=new_session(model),
-    #                 post_process_mask=post_processing,
-    #                 alpha_matting=alpha_matting,
-    #                 alpha_matting_foreground_threshold=alpha_matting_foreground_threshold,
-    #                 alpha_matting_background_threshold=alpha_matting_background_threshold,
-    #                 alpha_matting_erode_size=alpha_matting_erode_size,
-    #                 only_mask=only_mask,
-    #                 bgcolor=bgrgba,
-    #                 # putalpha = putalpha,
-    #             )
-    #             .convert(('RGBA' if transparency else 'RGB'))))
-    #     batch_tensor = torch.cat(batch_tensor, dim=0)
+        batch_tensor = []
+        for image in images:
+            image = tensor2pil(image)
+            batch_tensor.append(pil2tensor(
+                remove(
+                    image,
+                    session=new_session(model),
+                    post_process_mask=post_processing,
+                    alpha_matting=alpha_matting,
+                    alpha_matting_foreground_threshold=alpha_matting_foreground_threshold,
+                    alpha_matting_background_threshold=alpha_matting_background_threshold,
+                    alpha_matting_erode_size=alpha_matting_erode_size,
+                    only_mask=only_mask,
+                    bgcolor=bgrgba,
+                    # putalpha = putalpha,
+                )
+                .convert(('RGBA' if transparency else 'RGB'))))
+        batch_tensor = torch.cat(batch_tensor, dim=0)
 
-    #     return (batch_tensor,)
+        return (batch_tensor,)
 
 
 # IMAGE BLEND MASK NODE
